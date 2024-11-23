@@ -23,13 +23,13 @@ export default function Home() {
   }
 
   return (
-    <div className="bg-black w-full h-screen text-white flex flex-col items-center justify-center">
+    <div className="bg-black w-full h-screen text-white flex flex-col items-center justify-center p-5">
       <h1 className="font-bold text-[50px]">ITranslide</h1>
-      <h2 className="font-semibold text-[20px]">The Ideal Website For Your Presentations</h2>
+      <h2 className="font-semibold text-[20px] text-center">The Ideal Website For Your Presentations</h2>
       <form className="flex flex-col items-center justify-center gap-3 mt-4">
         <label>Nickname:</label>
-        <input required placeholder="SpongeBob" className="input w-[300px] text-black" onChange={(e) => setNickname(e.target.value)}/>
-        <button type="submit" className="button w-[300px]" disabled={nickname === "" ? true : false} onClick={handleLogin}>Enter</button>
+        <input required placeholder="SpongeBob" className="input w-[250px] md:w-[300px] text-black" onChange={(e) => setNickname(e.target.value)}/>
+        <button type="submit" className="button w-[250px] md:w-[300px]" disabled={nickname === "" ? true : false} onClick={handleLogin}>Enter</button>
       </form>
     </div>
   );
