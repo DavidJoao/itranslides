@@ -10,6 +10,7 @@ const ObjectVersionSchema = new mongoose.Schema(
 )
 
 const PresentationSchema = new mongoose.Schema({
+	creatorNickname: String,
     name: String,
 	creationDate: { type: Date, default: Date.now },
 	versions: [ObjectVersionSchema],
