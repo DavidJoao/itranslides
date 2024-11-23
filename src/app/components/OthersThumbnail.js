@@ -1,10 +1,11 @@
 import React from 'react'
 
-const OthersThumbnail = ({user}) => {
+const OthersThumbnail = ({ presentation }) => {
   return (
 <div className='flex flex-col items-center justify-center'>
     <div className='presentation-thumbnail'></div>
-    <p>{user}</p>
+    <p>{presentation.name}</p>
+    <p>{presentation.creatorNickname}</p>
 </div>
   )
 }
