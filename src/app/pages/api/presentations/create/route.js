@@ -14,12 +14,14 @@ export async function POST(req) {
             return NextResponse.json( { error: "Nickname and user ID are required" }, { status: 400 } );
         }
 
+        const user = await User.findById(userId);
+
         const newPresentation = await Presentation.create({
             name: presentationName,
-            creator: userId
+            creator: userId,
+            creatorNickname: user.nickname
         })
 
-        const user = await User.findById(userId);
         if (!user) {
             return NextResponse.json({ error: "User not found" }, { status: 404 });
         }
