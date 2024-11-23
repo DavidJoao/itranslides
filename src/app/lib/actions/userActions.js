@@ -1,9 +1,10 @@
 import axios from "axios"
+import { navigate } from "../redirect"
 
 export const createUser = async (user) => {
     try {
-        const res = await axios.post(`/pages/api/user/create?nickname=${user}`)
-        return res
+        const response = await axios.post(`/pages/api/user/create?nickname=${user}`)
+        return response
     } catch (error) {
         return error
     }
@@ -34,5 +35,17 @@ export const getAndSetSession = async () => {
         }
     } catch (error) {
         console.error(error);
+    }
+}
+
+export const logoutUser = async () => {
+    try {
+        const response = await axios.get("/pages/api/user/logout");
+        if (response.status === 200) {
+            navigate('/')
+        }
+        return response;
+    } catch (error) {
+        console.error(error)
     }
 }
