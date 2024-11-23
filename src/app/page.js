@@ -1,5 +1,4 @@
 'use client'
-import axios from 'axios'
 import { navigate } from './lib/redirect'
 import { useAppContext } from './components/ContextProvider'
 import { useState } from 'react'
