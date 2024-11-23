@@ -9,6 +9,9 @@
 
   .input {
     @apply rounded p-2
+  } 
+  .presentation-thumbnail {
+    @apply border-[1px] border-black w-[100px] h-[100px] flex-shrink-0 rounded shadow-lg
   }
 }
 
