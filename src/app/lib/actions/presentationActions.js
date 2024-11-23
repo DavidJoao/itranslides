@@ -17,3 +17,12 @@ export const getPresentations = async () => {
         return console.error({ message: error })
     }
 }
+
+export const getMyPresentations = async (userId) => {
+    try {
+        const response = await axios.get(`/pages/api/presentations?userId=${userId}`)
+        return response;
+    } catch (error) {
+        return console.error({ message: error })
+    }
+}
