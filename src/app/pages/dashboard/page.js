@@ -4,7 +4,7 @@ import OthersThumbnail from '@/app/components/OthersThumbnail'
 import PresentationThumbnail from '@/app/components/PresentationThumbnail'
 import { createPresentation } from '@/app/lib/actions/presentationActions'
 import React, { useEffect, useState } from 'react'
-import { checkSession, getAndSetSession } from '@/app/lib/actions/userActions'
+import { checkSession, getAndSetSession, logoutUser } from '@/app/lib/actions/userActions'
 import { navigate } from '@/app/lib/redirect'
 
 const page = () => {
@@ -40,7 +40,7 @@ const page = () => {
         <div className='flex flex-col items-start p-5 gap-3'>
           <div className='flex flex-row items-center justify-between p-2 gap-3 w-full '>
             <button className='bg-blue-500 rounded p-2 text-white font-bold' onClick={() => setCreationStatus(!creationStatus)}>Create Presentation</button>
-            <button className='bg-red-500 rounded p-2 text-white font-bold'>Log Out</button>
+            <button className='bg-red-500 rounded p-2 text-white font-bold' onClick={() => logoutUser()}>Log Out</button>
           </div>
           <form className={`${creationStatus === true ? 'flex' : 'hidden'} items-center p-5 gap-3`} onSubmit={handleSubmit}>
               <label>Presentation Name:</label>
