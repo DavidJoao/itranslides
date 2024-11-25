@@ -2,19 +2,46 @@
 import { useAppContext } from '@/app/components/ContextProvider'
 import OthersThumbnail from '@/app/components/OthersThumbnail'
 import PresentationThumbnail from '@/app/components/PresentationThumbnail'
-import { createPresentation, getMyPresentations, getPresentations } from '@/app/lib/actions/presentationActions'
+import { createPresentation, getMyPresentations, getPresentations, deletePresentationById } from '@/app/lib/actions/presentationActions'
 import React, { useEffect, useState } from 'react'
 import { checkSession, getAndSetSession, logoutUser } from '@/app/lib/actions/userActions'
 import { navigate } from '@/app/lib/redirect'
+import { emitNewPresentation, emitDeletePresentation } from '@/app/lib/actions/socketActions'
+import io from 'socket.io-client'
 
 const page = () => {
-
+	
+	const socket = io('http://localhost:3001');
     const { activeUser, setActiveUser } = useAppContext()
 
     const [creationStatus, setCreationStatus] = useState(false)
     const [presentationName, setPresentationName] = useState("")
     const [presentations, setPresentations] = useState([])
     const [myPresentations, setMyPresentations] = useState([])
+
+	useEffect(() => {
+        const handleSocketCreation = async () => {
+            socket.on("New Presentation", async () => {
+                await fetchPresentations(activeUser); 
+            });
+        };
+        handleSocketCreation();
+        return () => {
+            socket.off("New Presentation");
+        };
+    }, [activeUser]);
+
+	useEffect(() => {
+        const handleSocketDeletion = async () => {
+			socket.on("Delete Presentation", async () => {
+				await fetchPresentations(activeUser)
+			})
+        };
+        handleSocketDeletion();
+        return () => {
+            socket.off("Delete Presentation");
+        };
+    }, [activeUser]);
 
     useEffect(() => {
         const getSession = async () => {
@@ -41,10 +68,16 @@ const page = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setCreationStatus(!creationStatus)
-        await createPresentation(presentationName, activeUser._id)
-        await fetchPresentations(activeUser)
-    }
+        setCreationStatus(!creationStatus);
+        await createPresentation(presentationName, activeUser._id);
+        await emitNewPresentation(presentationName);
+    };
+
+	const handleDelete = async (e, presentation) => {
+		e.preventDefault();
+		await deletePresentationById(presentation?._id)
+		await emitDeletePresentation(presentation.name)
+	  }
 
   return (
 		<div className="border-[1px] border-black lg:w-screen h-auto lg:h-screen flex flex-col">
@@ -69,7 +102,7 @@ const page = () => {
 								<>
 									{myPresentations?.map((presentation, index) => {
 										return (
-											<PresentationThumbnail key={index} presentation={presentation}/>
+											<PresentationThumbnail key={index} presentation={presentation} handleDelete={handleDelete}/>
 										)
 									})}
 								</>
