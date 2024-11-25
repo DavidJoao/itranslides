@@ -7,17 +7,27 @@ const ObjectVersionSchema = new mongoose.Schema(
 		description: String,
 	},
 	{ _id: false }
-)
+);
+
+const SlideSchema = new mongoose.Schema(
+	{
+		position: { type: Number, required: true },
+		text: { type: String, default: "" },
+		otherProperties: { type: mongoose.Schema.Types.Mixed, default: {} },
+	},
+	{ _id: false }
+);
 
 const PresentationSchema = new mongoose.Schema({
 	creatorNickname: String,
-    name: String,
+	name: String,
 	creationDate: { type: Date, default: Date.now },
 	versions: [ObjectVersionSchema],
+	slides: [SlideSchema],
 	creator: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 	viewers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
 	editors: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-})
+});
 
 PresentationSchema.virtual("currentObjects").get(function () {
 	if (this.versions.length > 0) {
