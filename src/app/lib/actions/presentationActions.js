@@ -26,3 +26,21 @@ export const getMyPresentations = async (userId) => {
         return console.error({ message: error })
     }
 }
+
+export const getPresentationById = async (presentationId) => {
+    try {
+        const response = await axios.get(`/pages/api/presentations/getById?presentationId=${presentationId}`)
+        return response;
+    } catch (error) {
+        return console.error({ message: error })
+    }
+}
+
+export const deletePresentationById = async (presentationId) => {
+    try {
+        const response = await axios.get(`/pages/api/presentations/delete?presentationId=${presentationId}`)
+        return response;
+    } catch (error) {
+        return console.error({ message: error })
+    }
+}
