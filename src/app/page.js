@@ -1,14 +1,29 @@
 'use client'
 import { navigate } from './lib/redirect'
 import { useAppContext } from './components/ContextProvider'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { createUser } from './lib/actions/userActions'
+import { checkSession } from './lib/actions/userActions'
+import { getAndSetSession } from './lib/actions/userActions'
 
 export default function Home() {
 
   const { setActiveUser } = useAppContext()
 
   const [nickname, setNickname] = useState(null)
+
+  useEffect(() => {
+    const getSession = async () => {
+      const res = await checkSession()
+      if (res.status === 200) {
+          const user = await getAndSetSession();
+          if (user) {
+            navigate('/pages/dashboard')
+          }
+      }
+      }
+      getSession()
+  })
 
   const handleLogin = async (e) => {
     e.preventDefault()
