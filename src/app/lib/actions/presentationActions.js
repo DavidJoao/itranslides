@@ -44,3 +44,21 @@ export const deletePresentationById = async (presentationId) => {
         return console.error({ message: error })
     }
 }
+
+export const createSlide = async (presentationId) => {
+    try { 
+        const response = await axios.post(`/pages/api/presentations/addNewSlide?presentationId=${presentationId}`)
+        return response;
+    } catch (error) {
+        return console.error({ message: error })
+    }
+}
+
+export const deleteSlide = async (presentationId, slideId) => {
+    try {
+        const response = await axios.post(`/pages/api/presentations/deleteSlide?presentationId=${presentationId}&slideId=${slideId}`)
+        return response
+    } catch (error) {
+        return console.error({ message: error })
+    }
+}
