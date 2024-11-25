@@ -6,6 +6,9 @@
   .button {
     @apply rounded bg-blue-500 hover:bg-blue-300 p-2 
   }
+  .red-button {
+    @apply rounded bg-red-500 hover:bg-red-300 p-2 
+  }
 
   .input {
     @apply rounded p-2
