@@ -71,6 +71,7 @@ const page = () => {
         setCreationStatus(!creationStatus);
         await createPresentation(presentationName, activeUser._id);
         await emitNewPresentation(presentationName);
+		setPresentationName("");
     };
 
 	const handleDelete = async (e, presentation) => {
