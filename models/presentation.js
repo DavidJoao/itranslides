@@ -14,8 +14,7 @@ const SlideSchema = new mongoose.Schema(
 		position: { type: Number, required: true },
 		text: { type: String, default: "" },
 		otherProperties: { type: mongoose.Schema.Types.Mixed, default: {} },
-	},
-	{ _id: false }
+	}
 );
 
 const PresentationSchema = new mongoose.Schema({
