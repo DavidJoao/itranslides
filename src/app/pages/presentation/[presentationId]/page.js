@@ -3,9 +3,13 @@ import { createSlide, deleteSlide, getPresentationById } from '@/app/lib/actions
 import React, { useEffect, useState } from 'react'
 import Slide from '@/app/components/Slide';
 import { icons } from '@/app/lib/icons';
+import io from 'socket.io-client'
+import { emitDeleteSlide, emitNewSlide } from '@/app/lib/actions/socketActions';
 
-    const PresentationPage = ({ params }) => {
+const PresentationPage = ({ params }) => {
 
+    const socket = io('http://localhost:3001');
+        
     const [presentationId, setPresentationId] = useState("")
     const [presentation, setPresentation] = useState({})
     const [currentSlide, setCurrentSlide] = useState()
@@ -15,23 +19,49 @@ import { icons } from '@/app/lib/icons';
         setPresentationId(presentationId)
         return presentationId
     }
-        useEffect(() => {
-            fetchPresentation()
-        }, [])
 
-        const fetchPresentation = async () => {
-            const id = await getParams();
-            const res = await getPresentationById(id)
-            setPresentation(res?.data?.presentation)
-            console.log(res?.data?.presentation)
-            return res;
-        }
+    useEffect(() => {
+		const handleSocketCreation = async () => {
+			socket.on("New Slide", async () => {
+				await fetchPresentation(presentationId)
+			})
+		}
+		handleSocketCreation()
+		return () => {
+			socket.off("New Slide")
+		}
+	}, [presentation])
 
-        const handleSlideAddition = async (e) => {
-            e.preventDefault();
-            await createSlide(presentationId)
-            await fetchPresentation()
-        }
+    useEffect(() => {
+		const handleSocketSlideDeletion = async () => {
+			socket.on("Delete Slide", async () => {
+				await fetchPresentation(presentationId)
+			})
+		}
+		handleSocketSlideDeletion()
+		return () => {
+			socket.off("Delete Slide")
+		}
+	}, [presentation])
+
+	useEffect(() => {
+		fetchPresentation()
+	}, [])
+
+	const fetchPresentation = async () => {
+		const id = await getParams()
+		const res = await getPresentationById(id)
+		setPresentation(res?.data?.presentation)
+		console.log(res?.data?.presentation)
+		return res
+	}
+
+	const handleSlideAddition = async e => {
+		e.preventDefault()
+		await createSlide(presentationId)
+        await emitNewSlide()
+		await fetchPresentation()
+	}
 
 
     return (
@@ -51,6 +81,7 @@ import { icons } from '@/app/lib/icons';
                                 <button className='red-button text-white' onClick={async (e) => {
                                     e.preventDefault();
                                     await deleteSlide(presentationId, slide._id);
+                                    await emitDeleteSlide();
                                     await fetchPresentation();
                                     }}>{icons.trash}</button>
                             </div>    
