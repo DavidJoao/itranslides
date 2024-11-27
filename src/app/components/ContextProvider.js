@@ -5,9 +5,11 @@ const AppContext = createContext()
 
 const Provider = ({ children }) => {
 	const [activeUser, setActiveUser] = useState(null)
+	const [presentation, setPresentation] = useState(null)
+	const [currentSlide, setCurrentSlide] = useState(null)
 
 	return (
-		<AppContext.Provider value={{ activeUser, setActiveUser }}>{children}</AppContext.Provider>
+		<AppContext.Provider value={{ activeUser, setActiveUser, presentation, setPresentation, currentSlide, setCurrentSlide }}>{children}</AppContext.Provider>
 	)
 }
 
