@@ -62,3 +62,12 @@ export const deleteSlide = async (presentationId, slideId) => {
         return console.error({ message: error })
     }
 }
+
+export const updateSlide = async (presentationId, slideId, elements) => {
+    try {
+        const response = await axios.post(`/pages/api/presentations/updateSlide?presentationId=${presentationId}&slideId=${slideId}`, elements, { headers: { 'Content-Type':'application/json' } })
+        return response
+    } catch (error) {
+        console.error({ message: error })
+    }
+}
