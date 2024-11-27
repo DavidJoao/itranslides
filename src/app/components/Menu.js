@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { updateSlide } from '../lib/actions/presentationActions';
 import { useAppContext } from './ContextProvider';
 import { getPresentationById } from '../lib/actions/presentationActions';
+import { emitChange } from '../lib/actions/socketActions';
 
 const Menu = () => {
 
@@ -44,6 +45,7 @@ const Menu = () => {
             const res = await getPresentationById(presentation?._id)
             await setPresentation(res?.data?.presentation)
             await setCurrentSlide(tempSlide)
+            await emitChange()
             setMenu(!menu);
         } catch (error) {
             console.error("Error updating elements:", error);

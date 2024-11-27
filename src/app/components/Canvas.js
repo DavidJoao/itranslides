@@ -3,6 +3,7 @@ import { Stage, Layer, Rect, Text, Circle } from 'react-konva';
 import { updateSlide } from '../lib/actions/presentationActions';
 import { useAppContext } from './ContextProvider';
 import { getPresentationById } from '../lib/actions/presentationActions';
+import { emitChange } from '../lib/actions/socketActions';
 
 const Canvas = ({ }) => {
 
@@ -19,6 +20,7 @@ const Canvas = ({ }) => {
     await updateSlide(presentation?._id, currentSlide._id, updatedElements);
     const res = await getPresentationById(presentation?._id);
     await setPresentation(res?.data?.presentation);
+    await emitChange()
   };
 
   const renderElement = (element, index) => {
