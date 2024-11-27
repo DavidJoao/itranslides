@@ -11,11 +11,11 @@ const ObjectVersionSchema = new mongoose.Schema(
 
 const SlideSchema = new mongoose.Schema(
 	{
-		position: { type: Number, required: true },
-		text: { type: String, default: "" },
-		otherProperties: { type: mongoose.Schema.Types.Mixed, default: {} },
-	}
-);
+	  position: { type: Number, required: true },
+	  elements: [{ type: mongoose.Schema.Types.Mixed }],
+	},
+	{ timestamps: true }
+  );
 
 const PresentationSchema = new mongoose.Schema({
 	creatorNickname: String,
