@@ -74,7 +74,7 @@ const Menu = () => {
             <button className='button' onClick={handleCreateElement}>Create</button>
         </div>
     </div>
-    <button className='bg-slate-600 text-white rounded p-1 w-[60px]' onClick={() => setMenu(!menu)}>Menu</button>
+    <button className='bg-slate-600 text-white rounded p-1 w-[100px]' onClick={() => setMenu(!menu)}>Menu</button>
     </>
   )
 }
