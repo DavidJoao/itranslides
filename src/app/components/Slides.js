@@ -20,7 +20,7 @@ const Slides = () => {
     }
 
 	return (
-		<div>
+		<div className="flex flex-row md:flex-col items-center lg:items-center gap-2 h-full w-full overflow-y-auto lg:overflow-x-auto">
 			{presentation.slides.map((slide, index) => (
 				<div key={slide._id} className={`slide flex-shrink-0 text-black flex flex-row items-start justify-between p-2 ${currentSlide?._id === slide?._id ? "border-[3px] border-blue-500" : ""}`} onClick={() => handleSelectSlide(slide)}>
 					<p>{index + 1}</p>
