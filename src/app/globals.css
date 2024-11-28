@@ -17,7 +17,7 @@
     @apply border-[1px] border-black w-[100px] h-[100px] flex-shrink-0 rounded shadow-lg
   }
   .slide {
-    @apply border-[1px] border-black w-[90px] md:w-[150px] h-[90px] md:h-[150px] bg-white rounded
+    @apply border-[1px] border-black w-[90px] md:w-[110px] lg:w-[150px] h-[90px] md:h-[110px] lg:h-[150px]  bg-white rounded
   }
 }
 
