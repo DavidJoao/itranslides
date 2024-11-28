@@ -1,5 +1,6 @@
 import axios from "axios"
 import { navigate } from "../redirect"
+import { socket } from "../socket"
 
 export const createUser = async (user) => {
     try {
@@ -49,3 +50,21 @@ export const logoutUser = async () => {
         console.error(error)
     }
 }
+
+export const updateUserRole = async (userId, presentationId, role) => {
+    try {
+        const response = await axios.post(`/pages/api/presentations/addUser?userId=${userId}&presentationId=${presentationId}&role=${role}`);
+
+        if (response && response.data) {
+            const roleData = response.data;
+            console.log(roleData);
+
+            socket.emit("update role", {
+                presentationId: presentationId,
+                roleData,
+            });
+        }
+    } catch (error) {
+        console.error("Error updating user role:", error);
+    }
+};
