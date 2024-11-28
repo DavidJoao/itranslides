@@ -7,6 +7,8 @@ module.exports = {
   ],
   theme: {
     extend: {
+      cursor: {
+      },
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
