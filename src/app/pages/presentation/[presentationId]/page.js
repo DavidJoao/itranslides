@@ -6,17 +6,16 @@ import { createSlide, getPresentationById } from '@/app/lib/actions/presentation
 import { useEffect} from 'react';
 import Menu from '@/app/components/Menu';
 import { emitJoinPresentation, emitLeavePresentation, emitNewSlide } from '@/app/lib/actions/socketActions';
-import ConnectedUsers from '@/app/components/ConnectedUsers';
 import { getAndSetSession } from '@/app/lib/actions/userActions';
 
 const PresentationPage = ({ params }) => {
 
-    const { presentation, setPresentation } = useAppContext();
+    const { presentation, setPresentation, isUserViewer, activeUser } = useAppContext();
 
     useEffect(() => {
         const setUserConnection = async () => {
             const { user } = await getAndSetSession();
-            await emitJoinPresentation(user, presentation?._id);
+            await emitJoinPresentation(user, presentation?._id, presentation);
         };
         setUserConnection()
 
@@ -55,12 +54,20 @@ const PresentationPage = ({ params }) => {
                     { presentation?.slides?.length === 0 ? (
                         <div className='flex flex-col items-center justify-center p-1'>
                             <p>Empty Presentation</p>
-                            <button className='button w-[150px] flex-shrink-0 text-white font-bold'  onClick={handleSlideCreation}>+</button>
+                            { !isUserViewer(presentation, activeUser) ? (
+                                <button className="button w-[90px] md:w-[110px] lg:w-[150px] flex-shrink-0 text-white font-bold" onClick={handleSlideCreation}>+</button>
+                            ) : (
+                                null
+                            ) }
                         </div>
                     ) : (
                         <div className='h-full flex flex-row md:flex-col items-center justify-start gap-2'>
-                            <Slides />
-                            <button className='button w-[90px] md:w-[110px] lg:w-[150px] flex-shrink-0 text-white font-bold' onClick={handleSlideCreation}>+</button>
+                            <Slides/>
+                            { !isUserViewer(presentation, activeUser) ? (
+                                <button className="button w-[90px] md:w-[110px] lg:w-[150px] flex-shrink-0 text-white font-bold" onClick={handleSlideCreation}>+</button>
+                            ) : (
+                                null
+                            ) }
                         </div>
                     ) }
                 </div>
