@@ -28,6 +28,16 @@ const PresentationSchema = new mongoose.Schema({
 	editors: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
 });
 
+PresentationSchema.methods.updateUserRole = function (userId, role) {
+    const roles = ["viewers", "editors"];
+    roles.forEach(r => {
+        this[r] = this[r].filter(user => user.toString() !== userId);
+    });
+    if (role) {
+        this[role].push(userId);
+    }
+};
+
 PresentationSchema.virtual("currentObjects").get(function () {
 	if (this.versions.length > 0) {
 		return this.versions[this.versions.length - 1].objects
