@@ -73,10 +73,7 @@ const PresentationPage = ({ params }) => {
 
                 <div className='fixed bottom-5 left-[50%] right-[50%] flex flex-col items-center justify-center gap-2'>
                     <Menu />
-                    <ConnectedUsers />
                 </div>
-
-
             </div>
         ) : (
             <div className='flex flex-col md:flex-row w-screen h-screen'>
