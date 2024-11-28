@@ -20,3 +20,11 @@ export const emitDeleteSlide = async (presentationName) => {
 export const emitChange = async (presentationId) => {
     socket.emit("slide change", { presentationId })
 }
+
+export const emitJoinPresentation = async (user, presentationId) => {
+    socket.emit("join presentation", { user, presentationId })
+}
+
+export const emitLeavePresentation = async (user, presentationId) => {
+    socket.emit("leave presentation", { user, presentationId })
+}
