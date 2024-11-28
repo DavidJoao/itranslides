@@ -7,7 +7,7 @@ import { emitChange } from '../lib/actions/socketActions';
 
 const Canvas = ({ }) => {
 
-    const { currentSlide, setCurrentSlide, presentation, setPresentation } = useAppContext();
+  const { currentSlide, setCurrentSlide, presentation, setPresentation } = useAppContext();
 
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
   const parentRef = useRef(null);
