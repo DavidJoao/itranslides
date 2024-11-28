@@ -50,6 +50,7 @@ const Menu = () => {
                     await setPresentation(res?.data?.presentation);
                     await setCurrentSlide(tempSlide);
                     await emitChange();
+                    setNewElement({...newElement, ['content']: ''})
                     setMenu(!menu);
                 } catch (error) {
                     console.error("Error updating elements:", error);
@@ -70,26 +71,36 @@ const Menu = () => {
   return (
     <>
     <div className={`rounded bg-slate-600 w-[270px] h-[600px] flex flex-col items-center justify-start p-2 text-white gap-3 ${menu === false ? 'hidden' : ''} mb-2`}>
-        <div className='menu-section'>
-            <input name='content' value={newElement.content} className='input p-1 w-full text-black' onChange={handleChange} placeholder='New Text'/>
-            <button className='button p-1' onClick={(e) => {handleCreateElement(e, 'text')}}>Create</button>
-        </div>
+        <form className='menu-section' onSubmit={(e) => {handleCreateElement(e, 'text')}}>
+            <input required name='content' value={newElement.content} className='input p-1 w-full text-black' onChange={handleChange} placeholder='New Text'/>
+            <button type='submit' className='button p-1'>Create</button>
+        </form>
         <div className='menu-section'>
             <p className='text-center'>Create Square</p>
             <input className='input p-0 w-full' name='color' type='color' onChange={handleChange}/>
             <button className='button p-1' onClick={(e) => handleCreateElement(e, 'rect')}>Create</button>
         </div>
-
+        <div className='menu-section '>
+            <button className='button bg-slate-400 p-1'>Eraser</button>
+        </div>
         <div className='menu-section h-full'>
             <p className='text-center'>Connected Users</p>
-            <div className='border-[1px] border-slate-200/50 rounded w-full h-full overflow-y-auto p-2'>
-                { connectedUsers?.map((user, index) => {
-                    return (
-                        <div key={index}>
-                            <p>- {user?.nickname}</p>
-                        </div>
-                    )
-                }) }
+            <div className='border-[1px] border-slate-200/50 rounded w-full h-full overflow-y-auto p-2 flex flex-col gap-2'>
+            {connectedUsers?.map((user, index) => {
+                const isViewer = presentation?.viewers.some(viewerId => viewerId === user._id);
+                const isEditor = presentation?.editors.some(editorId => editorId === user._id);
+                const isCreator = user._id === presentation.creator;
+
+                return (
+                    <p key={index} className='flex items-center p-1 border bg-slate-500 rounded w-full'>
+                        <span className="flex w-3 h-3 me-3 bg-green-600 rounded-full"></span>
+                        {user?.nickname}
+                        {isCreator && " (Creator)"}
+                        {isEditor && " (Editor)"}
+                        {isViewer && " (Viewer)"}
+                    </p>
+                );
+            })}
             </div>
         </div>
     </div>
