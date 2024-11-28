@@ -9,7 +9,7 @@ import { navigate } from '@/app/lib/redirect'
 import { emitNewPresentation, emitDeletePresentation } from '@/app/lib/actions/socketActions'
 import io from 'socket.io-client'
 
-const page = () => {
+const Dashboard = () => {
 	
 	const socket = io('http://localhost:3001');
     const { activeUser, setActiveUser } = useAppContext()
@@ -137,4 +137,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Dashboard
