@@ -5,7 +5,7 @@ import { deleteSlide, getPresentationById } from "../lib/actions/presentationAct
 import { emitDeleteSlide } from "../lib/actions/socketActions"
 
 const Slides = () => {
-	const { presentation, setPresentation, currentSlide, setCurrentSlide } = useAppContext()
+	const { presentation, setPresentation, currentSlide, setCurrentSlide, activeUser, isUserViewer } = useAppContext()
 
 	const handleSelectSlide = slide => {
 		setCurrentSlide(slide)
@@ -24,7 +24,11 @@ const Slides = () => {
 			{presentation.slides.map((slide, index) => (
 				<div key={slide._id} className={`slide flex-shrink-0 text-black flex flex-row items-start justify-between p-2 ${currentSlide?._id === slide?._id ? "border-[3px] border-blue-500" : ""}`} onClick={() => handleSelectSlide(slide)}>
 					<p>{index + 1}</p>
-                    <button className="red-button text-white" onClick={(e) => handleDelete(e, slide?._id)}>{icons.trash}</button>
+					{ !isUserViewer(presentation, activeUser) ? (
+						<button className="red-button text-white" onClick={(e) => handleDelete(e, slide?._id)}>{icons.trash}</button>
+                            ) : (
+                    	null
+                    ) }
 				</div>
 			))}
 		</div>
