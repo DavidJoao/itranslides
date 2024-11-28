@@ -1,13 +1,15 @@
 import React from 'react'
 import { navigate } from '../lib/redirect'
 import { useAppContext } from './ContextProvider'
-import { getPresentationById } from '../lib/actions/presentationActions'
+import { getPresentationById, addUserToPresentation } from '../lib/actions/presentationActions'
+import { updateUserRole } from '../lib/actions/userActions'
 
 const PresentationThumbnail = ( {index, presentation, handleDelete} ) => {
 
-  const { setPresentation } = useAppContext()
+  const { setPresentation, activeUser } = useAppContext()
 
   const handleSelectPresentation = async () => {
+    if (activeUser?._id !== presentation?.creator) updateUserRole(activeUser?._id, presentation?._id, 'viewers')
     const res = await getPresentationById(presentation?._id);
     await setPresentation(res?.data?.presentation);
     await navigate(`/pages/presentation/${presentation._id}`)
