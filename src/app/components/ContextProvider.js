@@ -10,12 +10,13 @@ const Provider = ({ children }) => {
 	const [activeUser, setActiveUser] = useState(null)
 	const [presentation, setPresentation] = useState(null)
 	const [currentSlide, setCurrentSlide] = useState(presentation?.slides[0] || null)
+    const [connectedUsers, setConnectedUsers] = useState([]);
 
 	const setThePresentation = async () => {
 		const res = await getPresentationById(presentation?._id);
 		setPresentation(res?.data?.presentation);
 	}
-	
+
 	useEffect(() => {
 		if (presentation?.slides?.length) {
 			const existingSlide = presentation.slides.find(slide => slide._id === currentSlide?._id);
@@ -26,29 +27,36 @@ const Provider = ({ children }) => {
 
     useEffect(() => {
         const handleSocketEvents = () => {
-            socket.on("New Slide", async () => {
-                await setThePresentation()
-            });
-            socket.on("Delete Slide", async () => {
-                await setThePresentation()
-            });
-            socket.on("Slide Change", async () => {
-                await setThePresentation()
-            });
+            const updateUsersHandler = (users) => {
+                setConnectedUsers(users);
+            };
+    
+            const updatePresentationHandler = async () => {
+                await setThePresentation();
+            };
+    
+            socket.on("update users", updateUsersHandler);
+            socket.on("New Slide", updatePresentationHandler);
+            socket.on("Delete Slide", updatePresentationHandler);
+            socket.on("Slide Change", updatePresentationHandler);
+    
+            return () => {
+                socket.off("update users", updateUsersHandler);
+                socket.off("New Slide", updatePresentationHandler);
+                socket.off("Delete Slide", updatePresentationHandler);
+                socket.off("Slide Change", updatePresentationHandler);
+            };
         };
-
-        handleSocketEvents();
-
-        return () => {
-            socket.off("New Slide");
-            socket.off("Delete Slide");
-            socket.off("Slide Change");
-        };
+    
+        const cleanup = handleSocketEvents();
+    
+        return cleanup;
     }, [presentation?._id]);
-	
+    
+
 
 	return (
-		<AppContext.Provider value={{ activeUser, setActiveUser, presentation, setPresentation, currentSlide, setCurrentSlide }}>{children}</AppContext.Provider>
+		<AppContext.Provider value={{ activeUser, setActiveUser, presentation, setPresentation, currentSlide, setCurrentSlide, connectedUsers, setConnectedUsers }}>{children}</AppContext.Provider>
 	)
 }
 
