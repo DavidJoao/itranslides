@@ -3,13 +3,31 @@ import Canvas from '@/app/components/Canvas';
 import { useAppContext } from '@/app/components/ContextProvider';
 import Slides from '@/app/components/Slides';
 import { createSlide, getPresentationById } from '@/app/lib/actions/presentationActions';
-import { useEffect } from 'react';
+import { useEffect} from 'react';
 import Menu from '@/app/components/Menu';
-import { emitNewSlide } from '@/app/lib/actions/socketActions';
+import { emitJoinPresentation, emitLeavePresentation, emitNewSlide } from '@/app/lib/actions/socketActions';
+import ConnectedUsers from '@/app/components/ConnectedUsers';
+import { getAndSetSession } from '@/app/lib/actions/userActions';
 
 const PresentationPage = ({ params }) => {
 
     const { presentation, setPresentation } = useAppContext();
+
+    useEffect(() => {
+        const setUserConnection = async () => {
+            const { user } = await getAndSetSession();
+            await emitJoinPresentation(user, presentation?._id);
+        };
+        setUserConnection()
+
+        return () => {
+            const disconnectUser = async () => {
+                const { user } = await getAndSetSession();
+                await emitLeavePresentation(user, presentation?._id)
+            };
+            disconnectUser();
+        };
+    }, [presentation]);
 
     const initiatePresentation = async () => {
         const { presentationId } = await params;
@@ -37,24 +55,25 @@ const PresentationPage = ({ params }) => {
                     { presentation?.slides?.length === 0 ? (
                         <div className='flex flex-col items-center justify-center p-1'>
                             <p>Empty Presentation</p>
-                            <button className='button w-[150px] text-white font-bold'  onClick={handleSlideCreation}>Add Slide</button>
+                            <button className='button w-[150px] flex-shrink-0 text-white font-bold'  onClick={handleSlideCreation}>+</button>
                         </div>
                     ) : (
-                        <div className='h-full flex flex-row md:flex-col items-center justify-start p-1 gap-2 overflow-scroll'>
+                        <div className='h-full flex flex-row md:flex-col items-center justify-start gap-2'>
                             <Slides />
-                            <button className='button w-[150px] text-white font-bold' onClick={handleSlideCreation}>Add Slide</button>
+                            <button className='button w-[90px] md:w-[110px] lg:w-[150px] flex-shrink-0 text-white font-bold' onClick={handleSlideCreation}>+</button>
                         </div>
                     ) }
                 </div>
 
 
                 <div className='border-[1px] border-black w-full md:w-[80%] h-full flex items-center justify-center p-5 bg-slate-400'>
-                    <Canvas />
+                    { presentation?.slides?.length ? ( <Canvas /> ) : ( <></> )}
                 </div>
 
 
-                <div className='fixed bottom-5 left-0 right-0 flex flex-col items-center justify-center'>
+                <div className='fixed bottom-5 left-[50%] right-[50%] flex flex-col items-center justify-center gap-2'>
                     <Menu />
+                    <ConnectedUsers />
                 </div>
 
 
