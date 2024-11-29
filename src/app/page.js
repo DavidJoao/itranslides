@@ -12,6 +12,10 @@ export default function Home() {
 
   const [nickname, setNickname] = useState(null)
 
+  if (typeof window !== 'undefined') {
+    localStorage.debug = 'socket.io-client:*';
+}
+
   useEffect(() => {
     const getSession = async () => {
       const res = await checkSession()
