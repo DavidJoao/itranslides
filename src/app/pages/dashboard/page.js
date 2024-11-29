@@ -7,11 +7,10 @@ import React, { useEffect, useState } from 'react'
 import { checkSession, getAndSetSession, logoutUser } from '@/app/lib/actions/userActions'
 import { navigate } from '@/app/lib/redirect'
 import { emitNewPresentation, emitDeletePresentation } from '@/app/lib/actions/socketActions'
-import io from 'socket.io-client'
+import { socket } from '@/app/lib/socket'
 
 const Dashboard = () => {
 	
-	const socket = io('http://localhost:3001');
     const { activeUser, setActiveUser } = useAppContext()
 
     const [creationStatus, setCreationStatus] = useState(false)
