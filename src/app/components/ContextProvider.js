@@ -57,6 +57,10 @@ const Provider = ({ children }) => {
                 console.log(roleData);
             });
 
+            socket.on("connect_error", (error) => {
+                console.error("WebSocket connection error:", error);
+            });
+
             socket.on("update users", updateUsersHandler);
             socket.on("New Slide", updatePresentationHandler);
             socket.on("Delete Slide", updatePresentationHandler);
