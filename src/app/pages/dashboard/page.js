@@ -81,24 +81,24 @@ const Dashboard = () => {
 	  }
 
   return (
-		<div className="border-[1px] border-black lg:w-screen h-auto lg:h-screen flex flex-col">
+		<div className="lg:w-screen h-auto lg:h-screen flex flex-col bg-slate-200">
 			{activeUser ? (
 				<>
-					<div className="flex flex-col items-start p-5 gap-3">
+					<div className="flex flex-col items-start p-5 gap-3 bg-white">
 						<div className="flex flex-row items-center justify-between p-2 gap-3 w-full ">
 							<button className="bg-blue-500 rounded p-2 text-white font-bold" onClick={() => setCreationStatus(!creationStatus)}>Create Presentation </button>
 							<button className="bg-red-500 rounded p-2 text-white font-bold" onClick={() => logoutUser()}> Log Out </button>
 						</div>
-						<form className={`${creationStatus === true ? "flex" : "hidden"} items-center p-5 gap-3`} onSubmit={handleSubmit}>
+						<form className={`${creationStatus === true ? "flex" : "hidden"} flex-col lg:flex-row items-center p-5 gap-3`} onSubmit={handleSubmit}>
 							<label>Presentation Name:</label>
 							<input value={presentationName} required className="input border bg-slate-100" onChange={e => setPresentationName(e.target.value)}/>
 							<button type="submit" className="button text-white font-bold"> Create </button>
 						</form>
 					</div>
 
-					<div className="border-[1px] border-black w-full h-auto flex flex-col p-5">
+					<div className="w-full h-auto flex flex-col p-5 bg-slate-200">
 						<p className="font-bold">My Presentations</p>
-						<div className="border-[1px] border-black w-full flex flex-row h-auto items-center justify-start gap-3 p-5 overflow-auto">
+						<div className="border-[1px] border-slate-400 bg-white rounded w-full flex flex-row h-auto items-center justify-start gap-3 p-5 overflow-auto">
 							{myPresentations.length !== 0 ? (
 								<>
 									{myPresentations?.map((presentation, index) => {
@@ -113,9 +113,9 @@ const Dashboard = () => {
 						</div>
 					</div>
 
-					<div className="border-[1px] border-black w-full h-auto flex flex-col p-5">
+					<div className="w-full h-auto flex flex-col p-5 bg-slate-200">
 						<p className="font-bold">All Presentations:</p>
-						<div className="border-[1px] border-black w-full flex flex-row h-auto items-center justify-start gap-3 p-5 overflow-auto">
+						<div className="border-[1px] border-slate-400 bg-white rounded w-full flex flex-row h-auto items-center justify-start gap-3 p-5 overflow-auto">
 							{presentations.length !== 0 ? (
 								<>
 									{presentations?.map((presentation, index) => {
