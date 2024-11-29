@@ -41,33 +41,41 @@ const Provider = ({ children }) => {
 
 
     useEffect(() => {
-        const updateUsersHandler = (users) => {
-            setConnectedUsers(users);
-        };
+
+        const handleSocketEvents = () => {
+            const updateUsersHandler = (users) => {
+                setConnectedUsers(users);
+            };
+
+            const updatePresentationHandler = async () => {
+                await setThePresentation();
+            };
+            
+            socket.on("Update Roles", (roleData) => {
+                setViewers(roleData?.viewers);
+                setEditors(roleData?.editors);
+                console.log(roleData);
+            });
+
+            socket.on("update users", updateUsersHandler);
+            socket.on("New Slide", updatePresentationHandler);
+            socket.on("Delete Slide", updatePresentationHandler);
+            socket.on("Slide Change", updatePresentationHandler);
+            
+            return () => {
+                socket.off("Update Roles");
+                socket.off("update users", updateUsersHandler);
+                socket.off("New Slide", updatePresentationHandler);
+                socket.off("Delete Slide", updatePresentationHandler);
+                socket.off("Slide Change", updatePresentationHandler);
+            };
+        }
+        const cleanup = handleSocketEvents();
+
+        return cleanup;
     
-        const updatePresentationHandler = async () => {
-            await setThePresentation();
-        };
     
-        socket.on("Update Roles", (roleData) => {
-            setEditors(roleData?.editors);
-            setViewers(roleData?.viewers);
-            console.log(roleData);
-        });
-    
-        socket.on("update users", updateUsersHandler);
-        socket.on("New Slide", updatePresentationHandler);
-        socket.on("Delete Slide", updatePresentationHandler);
-        socket.on("Slide Change", updatePresentationHandler);
-    
-        return () => {
-            socket.off("Update Roles");
-            socket.off("update users", updateUsersHandler);
-            socket.off("New Slide", updatePresentationHandler);
-            socket.off("Delete Slide", updatePresentationHandler);
-            socket.off("Slide Change", updatePresentationHandler);
-        };
-    }, [activeUser, presentation]);
+    }, [presentation?._id]);
     
 
 
