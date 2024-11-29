@@ -19,17 +19,16 @@ const Dashboard = () => {
     const [myPresentations, setMyPresentations] = useState([])
 
 	useEffect(() => {
-		const handleSocketCreation = async () => {
-			const fetchAndSetPresentations = async () => {
-				await fetchPresentations(activeUser);
-			};
-			socket.on("New Presentation", fetchAndSetPresentations);
-			return () => {
-				socket.off("New Presentation", fetchAndSetPresentations);
-			};
-		};
-		handleSocketCreation();
-	}, [activeUser]);
+        const handleSocketCreation = async () => {
+            socket.on("New Presentation", async () => {
+                await fetchPresentations(activeUser); 
+            });
+        };
+        handleSocketCreation();
+        return () => {
+            socket.off("New Presentation");
+        };
+    }, [activeUser]);
 
 	useEffect(() => {
         const handleSocketDeletion = async () => {
