@@ -64,7 +64,7 @@ const Provider = ({ children }) => {
             socket.off("New Presentation", handleLoadPresentations);
             socket.off("Delete Presentation", handleLoadPresentations);
         };
-    }, [presentation?._id]);
+    }, [activeUser?._id]);
 
     useEffect(() => {
         const updateUsersHandler = (users) => {

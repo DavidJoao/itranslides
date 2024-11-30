@@ -49,15 +49,15 @@ const Dashboard = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setCreationStatus(!creationStatus);
-        await createPresentation(presentationName, activeUser._id);
-        await emitNewPresentation(presentationName, activeUser);
+        await createPresentation(presentationName, activeUser?._id);
+        await emitNewPresentation(presentationName, activeUser?._id);
 		setPresentationName("");
     };
 
 	const handleDelete = async (e, presentation) => {
 		e.preventDefault();
 		await deletePresentationById(presentation?._id)
-		await emitDeletePresentation(presentation?.name, activeUser)
+		await emitDeletePresentation(presentation?.name, activeUser?._id)
 	  }
 
   return (
