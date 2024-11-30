@@ -3,6 +3,7 @@ import { createContext, useContext, useState, useEffect } from "react"
 import { getPresentationById } from "../lib/actions/presentationActions"
 import { socket } from "../lib/socket"
 import { getAndSetSession, hasRole } from "../lib/actions/userActions"
+import { getPresentations, getMyPresentations } from "../lib/actions/presentationActions"
 
 const AppContext = createContext()
 
@@ -10,6 +11,8 @@ const Provider = ({ children }) => {
     
     const [activeUser, setActiveUser] = useState(null)
 	const [presentation, setPresentation] = useState(null)
+    const [presentations, setPresentations] = useState([])
+    const [myPresentations, setMyPresentations] = useState([])
 	const [currentSlide, setCurrentSlide] = useState(presentation?.slides[0] || null)
     const [connectedUsers, setConnectedUsers] = useState([]);
     const [viewers, setViewers] = useState([])
@@ -24,21 +27,28 @@ const Provider = ({ children }) => {
         return presentation?.viewers.some(viewerId => viewerId === activeUser?._id);
     };
 
+    const handleLoadPresentations = async () => {
+        const allRes = await getPresentations()
+        setPresentations(allRes?.data?.presentations)
+        const myRes = await getMyPresentations(activeUser?._id)
+        setMyPresentations(myRes?.data?.presentations)
+    };
+
     useEffect(() => {
-        const handleNewPresentation = async () => {
-            await setThePresentation(); 
-        };
+        const loadPresentations = async () => {
+            handleLoadPresentations()
+        }
+        loadPresentations();
+    }, [])
+
+    useEffect(() => {
     
-        const handleDeletePresentation = async () => {
-            await setThePresentation();
-        };
-    
-        socket.on("New Presentation", handleNewPresentation);
-        socket.on("Delete Presentation", handleDeletePresentation);
+        socket.on("New Presentation", handleLoadPresentations);
+        socket.on("Delete Presentation", handleLoadPresentations);
     
         return () => {
-            socket.off("New Presentation", handleNewPresentation);
-            socket.off("Delete Presentation", handleDeletePresentation);
+            socket.off("New Presentation", handleLoadPresentations);
+            socket.off("Delete Presentation", handleLoadPresentations);
         };
     }, [presentation?._id]);
 
@@ -91,12 +101,14 @@ const Provider = ({ children }) => {
         };
     }, [presentation?._id]);
 
+    
+
 	return (
 		<AppContext.Provider
 			value={{
 				activeUser,
 				setActiveUser,
-				presentation,
+				presentation, presentations, setMyPresentations, myPresentations, setPresentations,
 				setPresentation,
 				currentSlide,
 				setCurrentSlide,

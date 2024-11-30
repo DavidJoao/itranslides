@@ -11,35 +11,16 @@ import { socket } from '@/app/lib/socket'
 
 const Dashboard = () => {
 	
-    const { activeUser, setActiveUser } = useAppContext()
+    const { activeUser, setActiveUser, myPresentations, setMyPresentations, presentations, setPresentations } = useAppContext()
 
     const [creationStatus, setCreationStatus] = useState(false)
     const [presentationName, setPresentationName] = useState("")
-    const [presentations, setPresentations] = useState([])
-    const [myPresentations, setMyPresentations] = useState([])
 
 	useEffect(() => {
-        const handleSocketCreation = async () => {
-            socket.on("New Presentation", async () => {
-                await fetchPresentations(activeUser); 
-            });
+        const handlePresentationsLoad = async () => {
+			await fetchPresentations(activeUser)
         };
-        handleSocketCreation();
-        return () => {
-            socket.off("New Presentation");
-        };
-    }, [activeUser]);
-
-	useEffect(() => {
-        const handleSocketDeletion = async () => {
-			socket.on("Delete Presentation", async () => {
-				await fetchPresentations(activeUser)
-			})
-        };
-        handleSocketDeletion();
-        return () => {
-            socket.off("Delete Presentation");
-        };
+        handlePresentationsLoad();
     }, [activeUser]);
 
     useEffect(() => {
@@ -69,14 +50,14 @@ const Dashboard = () => {
         e.preventDefault();
         setCreationStatus(!creationStatus);
         await createPresentation(presentationName, activeUser._id);
-        await emitNewPresentation(presentationName);
+        await emitNewPresentation(presentationName, activeUser);
 		setPresentationName("");
     };
 
 	const handleDelete = async (e, presentation) => {
 		e.preventDefault();
 		await deletePresentationById(presentation?._id)
-		await emitDeletePresentation(presentation.name)
+		await emitDeletePresentation(presentation?.name, activeUser)
 	  }
 
   return (
@@ -98,7 +79,7 @@ const Dashboard = () => {
 					<div className="w-full h-auto flex flex-col p-5 bg-slate-200">
 						<p className="font-bold">My Presentations</p>
 						<div className="border-[1px] border-slate-400 bg-white rounded w-full flex flex-row h-auto items-center justify-start gap-3 p-5 overflow-auto">
-							{myPresentations.length !== 0 ? (
+							{myPresentations?.length !== 0 ? (
 								<>
 									{myPresentations?.map((presentation, index) => {
 										return (

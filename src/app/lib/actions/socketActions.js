@@ -1,10 +1,12 @@
 import { socket } from "../socket";
 
-export const emitNewPresentation = async (presentationName) => {
+export const emitNewPresentation = async (presentationName, activeUser) => {
+    console.log(activeUser)
     socket.emit("new presentation", presentationName);
 }
 
-export const emitDeletePresentation = async (user, presentationName, fetchPresentations) => {
+export const emitDeletePresentation = async (presentationName, activeUser) => {
+    console.log(activeUser)
     socket.emit("delete presentation", presentationName);
 }
 
