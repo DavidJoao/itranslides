@@ -27,7 +27,7 @@ const Provider = ({ children }) => {
         return presentation?.viewers.some(viewerId => viewerId === activeUser?._id);
     };
 
-    const handleLoadPresentations = async () => {
+    const handleLoadPresentations = useCallback(async () => {
         const allRes = await getPresentations();
         setPresentations(allRes?.data?.presentations);
         
@@ -35,7 +35,7 @@ const Provider = ({ children }) => {
             const myRes = await getMyPresentations(activeUser._id);
             setMyPresentations(myRes?.data?.presentations);
         }
-    };
+    }, [activeUser]);
 
     useEffect(() => {
         const setUser = async () => {
@@ -63,7 +63,7 @@ const Provider = ({ children }) => {
             socket.off("New Presentation", handleLoadPresentations);
             socket.off("Delete Presentation", handleLoadPresentations);
         };
-    }, [presentation?._id]);
+    }, [activeUser]);
 
     useEffect(() => {
         const updateUsersHandler = (users) => {
