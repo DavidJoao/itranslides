@@ -25,6 +25,24 @@ const Provider = ({ children }) => {
     };
 
     useEffect(() => {
+        const handleNewPresentation = async () => {
+            await setThePresentation(); 
+        };
+    
+        const handleDeletePresentation = async () => {
+            await setThePresentation();
+        };
+    
+        socket.on("New Presentation", handleNewPresentation);
+        socket.on("Delete Presentation", handleDeletePresentation);
+    
+        return () => {
+            socket.off("New Presentation", handleNewPresentation);
+            socket.off("Delete Presentation", handleDeletePresentation);
+        };
+    }, [presentation?._id]);
+
+    useEffect(() => {
         const setUser = async () => {
             const response = await getAndSetSession()
             setActiveUser(response?.user)
