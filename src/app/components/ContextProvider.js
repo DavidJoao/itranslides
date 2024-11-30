@@ -49,7 +49,8 @@ const Provider = ({ children }) => {
     
     useEffect(() => {
         const loadPresentations = async () => {
-            handleLoadPresentations()
+            await handleLoadPresentations()
+            await setThePresentation();
         }
         loadPresentations();
     }, [])
@@ -63,7 +64,7 @@ const Provider = ({ children }) => {
             socket.off("New Presentation", handleLoadPresentations);
             socket.off("Delete Presentation", handleLoadPresentations);
         };
-    }, []);
+    }, [presentation?._id]);
 
     useEffect(() => {
         const updateUsersHandler = (users) => {
@@ -96,7 +97,7 @@ const Provider = ({ children }) => {
             socket.off("Delete Slide", updatePresentationHandler);
             socket.off("Slide Change", updatePresentationHandler);
         };
-    }, []);
+    }, [presentation?._id]);
     
     useEffect(() => {
         if (presentation?.slides?.length) {
