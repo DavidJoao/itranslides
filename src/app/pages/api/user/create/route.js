@@ -30,7 +30,7 @@ export async function POST(req) {
 
         response.cookies.set('userId', user._id.toString(), {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
+            secure: process.env.NEXT_PUBLIC_NODE_ENV === 'production',
             sameSite: 'strict',
             maxAge: 60 * 60 * 24 * 7,
             path: '/',
