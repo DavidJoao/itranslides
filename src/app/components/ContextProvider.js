@@ -41,45 +41,37 @@ const Provider = ({ children }) => {
 
 
     useEffect(() => {
-
-        const handleSocketEvents = () => {
-            const updateUsersHandler = (users) => {
-                setConnectedUsers(users);
-            };
-
-            const updatePresentationHandler = async () => {
-                await setThePresentation();
-            };
-            
-            socket.on("Update Roles", (roleData) => {
-                setViewers(roleData?.viewers);
-                setEditors(roleData?.editors);
-                console.log(roleData);
-            });
-
-            socket.on("connect", () => console.log("Connected to WebSocket server"));
-            socket.on("connect_error", (err) => console.error("WebSocket connection error:", err));
-            socket.on("update users", updateUsersHandler);
-            socket.on("New Slide", updatePresentationHandler);
-            socket.on("Delete Slide", updatePresentationHandler);
-            socket.on("Slide Change", updatePresentationHandler);
-            
-            return () => {
-                socket.off("Update Roles");
-                socket.off("update users", updateUsersHandler);
-                socket.off("New Slide", updatePresentationHandler);
-                socket.off("Delete Slide", updatePresentationHandler);
-                socket.off("Slide Change", updatePresentationHandler);
-            };
-        }
-        const cleanup = handleSocketEvents();
-
-        return cleanup;
+        const updateUsersHandler = (users) => {
+            setConnectedUsers(users);
+        };
     
+        const updatePresentationHandler = async () => {
+            await setThePresentation();
+        };
     
+        socket.on("Update Roles", (roleData) => {
+            setViewers(roleData?.viewers);
+            setEditors(roleData?.editors);
+            console.log(roleData);
+        });
+    
+        socket.on("connect_error", (error) => {
+            console.error("WebSocket connection error:", error);
+        });
+    
+        socket.on("update users", updateUsersHandler);
+        socket.on("New Slide", updatePresentationHandler);
+        socket.on("Delete Slide", updatePresentationHandler);
+        socket.on("Slide Change", updatePresentationHandler);
+    
+        return () => {
+            socket.off("Update Roles");
+            socket.off("update users", updateUsersHandler);
+            socket.off("New Slide", updatePresentationHandler);
+            socket.off("Delete Slide", updatePresentationHandler);
+            socket.off("Slide Change", updatePresentationHandler);
+        };
     }, [presentation?._id]);
-    
-
 
 	return (
 		<AppContext.Provider
