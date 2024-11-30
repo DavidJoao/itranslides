@@ -5,7 +5,7 @@ export async function GET(req) {
         const response = NextResponse.json({ message: "Logged out successfully" }, { status: 200 });
         response.cookies.set('userId', '', {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
+            secure: process.env.NEXT_PUBLIC_NODE_ENV === 'production',
             sameSite: 'strict',
             maxAge: 0,
             path: '/',
