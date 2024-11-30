@@ -28,22 +28,25 @@ const Provider = ({ children }) => {
     };
 
     const handleLoadPresentations = async () => {
-        const allRes = await getPresentations()
-        setPresentations(allRes?.data?.presentations)
-        const myRes = await getMyPresentations(activeUser?._id)
-        setMyPresentations(myRes?.data?.presentations)
+        const allRes = await getPresentations();
+        setPresentations(allRes?.data?.presentations);
+        
+        if (activeUser) {
+            const myRes = await getMyPresentations(activeUser._id);
+            setMyPresentations(myRes?.data?.presentations);
+        }
     };
 
     useEffect(() => {
         const setUser = async () => {
             const user = await getAndSetSession();
             if (user) {
-            await setActiveUser(user?.user)
+                setActiveUser(user.user);
             }
-        }
-        setUser()
-    }, [])
-
+        };
+        setUser();
+    }, []);
+    
     useEffect(() => {
         const loadPresentations = async () => {
             handleLoadPresentations()
@@ -63,45 +66,29 @@ const Provider = ({ children }) => {
     }, [presentation?._id]);
 
     useEffect(() => {
-        const setUser = async () => {
-            const response = await getAndSetSession()
-            setActiveUser(response?.user)
-        } 
-        setUser()
-    }, [])
-
-	useEffect(() => {
-		if (presentation?.slides?.length) {
-			const existingSlide = presentation.slides.find(slide => slide._id === currentSlide?._id);
-			setCurrentSlide(existingSlide || presentation.slides[0]);
-		}
-	}, [presentation]);
-
-
-    useEffect(() => {
         const updateUsersHandler = (users) => {
             setConnectedUsers(users);
         };
-    
+        
         const updatePresentationHandler = async () => {
             await setThePresentation();
         };
-    
+        
         socket.on("Update Roles", (roleData) => {
             setViewers(roleData?.viewers);
             setEditors(roleData?.editors);
             console.log(roleData);
         });
-    
+        
         socket.on("connect_error", (error) => {
             console.error("WebSocket connection error:", error);
         });
-    
+        
         socket.on("update users", updateUsersHandler);
         socket.on("New Slide", updatePresentationHandler);
         socket.on("Delete Slide", updatePresentationHandler);
         socket.on("Slide Change", updatePresentationHandler);
-    
+        
         return () => {
             socket.off("Update Roles");
             socket.off("update users", updateUsersHandler);
@@ -110,17 +97,22 @@ const Provider = ({ children }) => {
             socket.off("Slide Change", updatePresentationHandler);
         };
     }, [presentation?._id]);
-
     
-
+    useEffect(() => {
+        if (presentation?.slides?.length) {
+            const existingSlide = presentation.slides.find(slide => slide._id === currentSlide?._id);
+            setCurrentSlide(existingSlide || presentation.slides[0]);
+        }
+    }, [presentation]);
+    
 	return (
-		<AppContext.Provider
-			value={{
-				activeUser,
-				setActiveUser,
-				presentation, presentations, setMyPresentations, myPresentations, setPresentations,
-				setPresentation,
-				currentSlide,
+        <AppContext.Provider
+        value={{
+            activeUser,
+            setActiveUser,
+            presentation, presentations, setMyPresentations, myPresentations, setPresentations,
+            setPresentation,
+            currentSlide,
 				setCurrentSlide,
 				connectedUsers,
 				setConnectedUsers,

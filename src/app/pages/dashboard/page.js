@@ -31,7 +31,7 @@ const Dashboard = () => {
         } else if (res.status === 200) {
             const user = await getAndSetSession();
             if (user) {
-            setActiveUser(user.user)
+            setActiveUser(user?.user)
             fetchPresentations(user.user);
             }
         }
