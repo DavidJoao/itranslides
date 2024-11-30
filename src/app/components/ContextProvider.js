@@ -1,5 +1,5 @@
 "use client"
-import { createContext, useContext, useState, useEffect } from "react"
+import { createContext, useContext, useState, useEffect, useCallback } from "react"
 import { getPresentationById } from "../lib/actions/presentationActions"
 import { socket } from "../lib/socket"
 import { getAndSetSession, hasRole } from "../lib/actions/userActions"
