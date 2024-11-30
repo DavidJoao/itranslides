@@ -32,7 +32,7 @@ const Dashboard = () => {
             const user = await getAndSetSession();
             if (user) {
             setActiveUser(user?.user)
-            fetchPresentations(user.user);
+            fetchPresentations(user?.user);
             }
         }
         }
