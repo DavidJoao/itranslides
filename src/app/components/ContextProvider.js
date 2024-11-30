@@ -35,6 +35,16 @@ const Provider = ({ children }) => {
     };
 
     useEffect(() => {
+        const setUser = async () => {
+            const user = await getAndSetSession();
+            if (user) {
+            await setActiveUser(user?.user)
+            }
+        }
+        setUser()
+    }, [])
+
+    useEffect(() => {
         const loadPresentations = async () => {
             handleLoadPresentations()
         }
